@@ -1,9 +1,9 @@
 [@bs.module "react-native-material-ui"]
-external color : ReasonReact.reactClass = "COLOR";
+external color: ReasonReact.reactClass = "COLOR";
 
 module ThemeProvider = {
   [@bs.module "react-native-material-ui"]
-  external themeProvider : ReasonReact.reactClass = "ThemeProvider";
+  external themeProvider: ReasonReact.reactClass = "ThemeProvider";
   type palette = {primaryColor: string};
   type uiTheme = {palette};
   let make = (~uiTheme: uiTheme, children) =>
@@ -12,21 +12,21 @@ module ThemeProvider = {
       ~props={
         "uiTheme": {
           "palette": {
-            "primaryColor": uiTheme.palette.primaryColor
-          }
-        }
+            "primaryColor": uiTheme.palette.primaryColor,
+          },
+        },
       },
-      children
+      children,
     );
 };
 
 module ActionButton = {
   [@bs.module "react-native-material-ui"]
-  external actionButton : ReasonReact.reactClass = "ActionButton";
+  external actionButton: ReasonReact.reactClass = "ActionButton";
   type shape = {
     icon: string,
     label: string,
-    name: string
+    name: string,
   };
   type actions =
     | StringAction(string)
@@ -37,7 +37,7 @@ module ActionButton = {
     | SpeedDial;
   type style = {
     container: option(BsReactNative.Style.t),
-    icon: option(BsReactNative.Style.t)
+    icon: option(BsReactNative.Style.t),
   };
   let make =
       (
@@ -48,55 +48,53 @@ module ActionButton = {
         ~icon: option(string)=?,
         ~transition: option(transition)=?,
         ~style: option(style)=?,
-        children
+        children,
       ) =>
     ReasonReact.wrapJsForReason(
       ~reactClass=actionButton,
       ~props=
-        Js.Undefined.(
-          {
-            "actions": from_opt(actions),
-            "onPress": from_opt(onPress),
-            "onLongPress": from_opt(onLongPress),
-            "hidden":
-              switch hidden {
-              | Some(true) => Js.true_
-              | Some(false) => Js.false_
-              | None => Js.false_
-              },
-            "icon": from_opt(icon),
-            "transition":
-              from_opt(
-                switch transition {
-                | Some(transition) =>
-                  switch transition {
-                  | Toolbar => Some("toolbar")
-                  | SpeedDial => Some("speedDial")
-                  }
-                | None => None
+        Js.Undefined.{
+          "actions": fromOption(actions),
+          "onPress": fromOption(onPress),
+          "onLongPress": fromOption(onLongPress),
+          "hidden":
+            switch (hidden) {
+            | Some(true) => true
+            | Some(false) => false
+            | None => false
+            },
+          "icon": fromOption(icon),
+          "transition":
+            fromOption(
+              switch (transition) {
+              | Some(transition) =>
+                switch (transition) {
+                | Toolbar => Some("toolbar")
+                | SpeedDial => Some("speedDial")
                 }
-              ),
-            "style": from_opt(style)
-          }
-        ),
-      children
+              | None => None
+              },
+            ),
+          "style": fromOption(style),
+        },
+      children,
     );
 };
 
 module ListItem = {
   [@bs.module "react-native-material-ui"]
-  external listItem : ReasonReact.reactClass = "ListItem";
+  external listItem: ReasonReact.reactClass = "ListItem";
   type palette = {primaryColor: string};
   type uiTheme = {palette};
   type centerElement = {
     primaryText: string,
     secondaryText: option(string),
-    tertiaryText: option(string)
+    tertiaryText: option(string),
   };
   let centerElement = (~secondaryText=?, ~tertiaryText=?, primaryText) => {
     primaryText,
     secondaryText,
-    tertiaryText
+    tertiaryText,
   };
   let make =
       (
@@ -105,70 +103,71 @@ module ListItem = {
         ~centerElement: option(centerElement)=?,
         ~leftElement: option(ReasonReact.reactElement)=?,
         ~rightElement: option(ReasonReact.reactElement)=?,
-        children
+        children,
       ) =>
     ReasonReact.wrapJsForReason(
       ~reactClass=listItem,
       ~props=
-        Js.Undefined.(
-          {
-            "divider":
-              switch divider {
-              | Some(true) => Js.true_
-              | Some(false) => Js.false_
-              | None => Js.false_
+        Js.Undefined.{
+          "divider":
+            switch (divider) {
+            | Some(true) => true
+            | Some(false) => false
+            | None => false
+            },
+          "onPress": fromOption(onPress),
+          "centerElement":
+            fromOption(
+              switch (centerElement) {
+              | Some(centerElement) =>
+                let dict = Js.Dict.empty();
+                Js.Dict.set(dict, "primaryText", centerElement.primaryText);
+                switch (centerElement.secondaryText) {
+                | Some(secondaryText) =>
+                  Js.Dict.set(dict, "secondaryText", secondaryText)
+                | None => ()
+                };
+                Some(dict);
+              | None => None
               },
-            "onPress": from_opt(onPress),
-            "centerElement":
-              from_opt(
-                switch centerElement {
-                | Some(centerElement) =>
-                  let dict = Js.Dict.empty();
-                  Js.Dict.set(dict, "primaryText", centerElement.primaryText);
-                  switch centerElement.secondaryText {
-                  | Some(secondaryText) =>
-                    Js.Dict.set(dict, "secondaryText", secondaryText)
-                  | None => ()
-                  };
-                  Some(dict);
-                | None => None
-                }
-              ),
-            "leftElement": from_opt(leftElement),
-            "rightElement": from_opt(rightElement)
-          }
-        ),
-      children
+            ),
+          "leftElement": fromOption(leftElement),
+          "rightElement": fromOption(rightElement),
+        },
+      children,
     );
 };
 
 module Subheader = {
   [@bs.module "react-native-material-ui"]
-  external subheader : ReasonReact.reactClass = "Subheader";
+  external subheader: ReasonReact.reactClass = "Subheader";
   let make =
-      (~text: string, ~inset: option(bool)=?, ~lines: option(int)=?, children) =>
+      (
+        ~text: string,
+        ~inset: option(bool)=?,
+        ~lines: option(int)=?,
+        children,
+      ) =>
     ReasonReact.wrapJsForReason(
       ~reactClass=subheader,
       ~props=
-        Js.Undefined.(
-          {
-            "text": text,
-            "inset":
-              switch inset {
-              | Some(true) => Js.true_
-              | Some(false) => Js.false_
-              | None => Js.false_
-              },
-            "lines": from_opt(lines)
-          }
-        ),
-      children
+        Js.Undefined.{
+          "text": text,
+          "inset":
+            switch (inset) {
+            | Some(true) => true
+            | Some(false) => false
+            | None => false
+            },
+          "lines": fromOption(lines),
+        },
+      children,
     );
 };
 
 module IconToggle = {
   [@bs.module "react-native-material-ui"]
-  external iconToggle : ReasonReact.reactClass = "IconToggle";
+  external iconToggle: ReasonReact.reactClass = "IconToggle";
   let make =
       (
         ~color: option(string)=?,
@@ -179,42 +178,40 @@ module IconToggle = {
         ~size: option(int)=?,
         ~name: string,
         ~onPress: option(unit => unit)=?,
-        children
+        children,
       ) =>
     ReasonReact.wrapJsForReason(
       ~reactClass=iconToggle,
       ~props=
-        Js.Undefined.(
-          {
-            "color": from_opt(color),
-            "maxOpacity": from_opt(maxOpacity),
-            "percent": from_opt(percent),
-            "underlayColor": from_opt(underlayColor),
-            "disabled":
-              switch disabled {
-              | Some(true) => Js.true_
-              | Some(false) => Js.false_
-              | None => Js.false_
-              },
-            "size": from_opt(size),
-            "name": name,
-            "onPress": from_opt(onPress)
-          }
-        ),
-      children
+        Js.Undefined.{
+          "color": fromOption(color),
+          "maxOpacity": fromOption(maxOpacity),
+          "percent": fromOption(percent),
+          "underlayColor": fromOption(underlayColor),
+          "disabled":
+            switch (disabled) {
+            | Some(true) => true
+            | Some(false) => false
+            | None => false
+            },
+          "size": fromOption(size),
+          "name": name,
+          "onPress": fromOption(onPress),
+        },
+      children,
     );
 };
 
 let optionBoolToJsBool = option =>
-  switch option {
-  | Some(true) => Js.true_
-  | Some(false) => Js.false_
-  | None => Js.false_
+  switch (option) {
+  | Some(true) => true
+  | Some(false) => false
+  | None => false
   };
 
 module Button = {
   [@bs.module "react-native-material-ui"]
-  external button : ReasonReact.reactClass = "Button";
+  external button: ReasonReact.reactClass = "Button";
   let make =
       (
         ~disabled: option(bool)=?,
@@ -227,25 +224,55 @@ module Button = {
         ~upperCase: option(bool)=?,
         ~icon: option(string)=?,
         ~style: option(BsReactNative.Style.t)=?,
-        children
+        children,
       ) =>
     ReasonReact.wrapJsForReason(
       ~reactClass=button,
       ~props=
-        Js.Undefined.(
-          {
-            "disabled": optionBoolToJsBool(disabled),
-            "raised": optionBoolToJsBool(raised),
-            "primary": optionBoolToJsBool(primary),
-            "accent": optionBoolToJsBool(accent),
-            "onPress": from_opt(onPress),
-            "onLongPress": from_opt(onLongPress),
-            "text": text,
-            "upperCase": from_opt(upperCase),
-            "icon": from_opt(icon),
-            "style": from_opt(style)
-          }
-        ),
-      children
+        Js.Undefined.{
+          "disabled": optionBoolToJsBool(disabled),
+          "raised": optionBoolToJsBool(raised),
+          "primary": optionBoolToJsBool(primary),
+          "accent": optionBoolToJsBool(accent),
+          "onPress": fromOption(onPress),
+          "onLongPress": fromOption(onLongPress),
+          "text": text,
+          "upperCase": fromOption(upperCase),
+          "icon": fromOption(icon),
+          "style": fromOption(style),
+        },
+      children,
+    );
+};
+
+module RadioButton = {
+  [@bs.module "react-native-material-ui"]
+  external radioButton: ReasonReact.reactClass = "RadioButton";
+  let make =
+      (
+        ~label: string,
+        ~value: string,
+        ~checked: option(bool)=?,
+        ~disabled: option(bool)=?,
+        ~onSelect: option(string => unit)=?,
+        ~onCheck: option(bool => unit)=?,
+        ~theme: option(string)=?,
+        ~style: option(BsReactNative.Style.t)=?,
+        children,
+      ) =>
+    ReasonReact.wrapJsForReason(
+      ~reactClass=radioButton,
+      ~props=
+        Js.Undefined.{
+          "label": label,
+          "value": value,
+          "checked": optionBoolToJsBool(checked),
+          "disabled": optionBoolToJsBool(disabled),
+          "onSelect": fromOption(onSelect),
+          "onCheck": fromOption(onCheck),
+          "theme": fromOption(theme),
+          "style": fromOption(style),
+        },
+      children,
     );
 };

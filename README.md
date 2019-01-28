@@ -9,14 +9,17 @@ Feel free to create an issue or pull request if you find anything missing.
 
 ## Installation
 
+Run:
+
 `yarn add bs-react-native-material-ui`
+
 `yarn add react-native-material-ui`
 
-Then add `react-native-material-ui` to `bs-dependencies` in your `bsconfig.json`:
+Then add `bs-react-native-material-ui` to `bs-dependencies` in your `bsconfig.json`:
 
 ```json
 {
-  "bs-dependencies": ["react-native-material-ui"]
+  "bs-dependencies": ["bs-react-native-material-ui"]
 }
 ```
 
